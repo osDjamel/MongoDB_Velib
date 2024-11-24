@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Velib Stations</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>Stations Velib</h1>
+    <div id="map" style="height: 600px;"></div>
+    <script>
+        const map = L.map('map').setView([48.8566, 2.3522], 12); // Paris
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        fetch('http://localhost:5000/stations')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(station => {
+                    L.marker([station.lat, station.lon])
+                        .bindPopup(`<b>${station.name}</b><br>Vélos disponibles : ${station.ebike}`)
+                        .addTo(map);
+                });
+            })
+            .catch(error => console.error("Erreur :", error));
+    </script>
+</body>
+</html>
